@@ -1,27 +1,88 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import { commands, ConfigurationTarget, ExtensionContext, window, workspace } from 'vscode';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vs-color-wheel" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vs-color-wheel.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from VS Color Wheel!');
-	});
-
-	context.subscriptions.push(disposable);
+export function activate(context: ExtensionContext) {
+  context.subscriptions.push(commands.registerCommand('vs-color-wheel.setPrimaryColor', async () => {
+    const primaryColor = await window.showInputBox({
+      value: '#ffffff',
+      placeHolder: 'Enter the hexidecimal value for your desired primary color'
+    });
+    const secondaryColor = "#48c5ff";
+    const tertiaryColor = "#8248ff";
+    window.showInformationMessage(`Setting ${primaryColor} as the primary color of your theme`);
+    const userConfig = ConfigurationTarget.Global;
+    try {
+      await workspace.getConfiguration().update('editor.tokenColorCustomizations', {
+        functions: primaryColor,
+        keywords: secondaryColor,
+        strings: tertiaryColor,
+        textMateRules: [
+          {
+            scope: 'keyword',
+            settings: {
+              foreground: secondaryColor
+            }
+          },
+          {
+            scope: 'entity.name.type',
+            settings: {
+              foreground: primaryColor
+            }
+          },
+          {
+            scope: 'support.constant',
+            settings: {
+              foreground: secondaryColor
+            }
+          },
+          {
+            scope: 'support.type',
+            settings: {
+              foreground: primaryColor
+            }
+          },
+          {
+            scope: 'variable.parameter',
+            settings: {
+              foreground: primaryColor
+            }
+          },
+          {
+            scope: 'constant.language',
+            settings: {
+              foreground: tertiaryColor
+            }
+          },
+          {
+            scope: 'constant.character',
+            settings: {
+              foreground: secondaryColor
+            }
+          },
+          {
+            scope: 'constant.numeric',
+            settings: {
+              foreground: tertiaryColor
+            }
+          },
+          {
+            scope: 'constant.other',
+            settings: {
+              foreground: secondaryColor
+            }
+          },
+          {
+            scope: 'source',
+            settings: {
+              foreground: '#ffffff'
+            }
+          }
+        ]
+      }, userConfig);
+    } catch (error) {
+      console.error(error);
+    }
+  }));
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
