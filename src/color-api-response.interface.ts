@@ -2,10 +2,11 @@ export interface ColorApiResponse {
   mode: string;
   count: number;
   colors: Color[];
+  seed: Color;
 }
 
 export interface Color {
-  ['string']: ColorValue;
+  hex: ColorValue;
 }
 
 export interface ColorValue {
