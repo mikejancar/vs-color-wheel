@@ -1,5 +1,5 @@
 export interface Scope {
-  scopes?: string | string[];
+  scopes?: string[];
   settings: {
     fontStyle?: string;
     foreground?: string;

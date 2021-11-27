@@ -5,10 +5,14 @@ export class ColorComputer {
   createTetradicScheme(primary: HueSaturationValue): HueSaturationValue[] {
     return [
       { hue: primary.hue, saturation: primary.saturation, value: primary.value },
-      { hue: primary.hue + 30, saturation: primary.saturation, value: primary.value },
-      { hue: primary.hue + 60, saturation: primary.saturation, value: primary.value },
-      { hue: primary.hue + 90, saturation: primary.saturation, value: primary.value }
+      { hue: this.computeHue(primary.hue + 210), saturation: primary.saturation, value: primary.value },
+      { hue: this.computeHue(primary.hue + 150), saturation: primary.saturation, value: primary.value },
+      { hue: this.computeHue(primary.hue + 60), saturation: primary.saturation, value: primary.value }
     ];
+  }
+
+  computeHue(hue: number): number {
+    return hue > 360 ? hue - 360 : hue;
   }
 
   hexToHsv(hex: string): HueSaturationValue {
@@ -50,7 +54,7 @@ export class ColorComputer {
 
   hsvToHex(hsv: HueSaturationValue): string {
     const rgb = this.hsvToRgb(hsv);
-    return '#' + this.rgbToHex(rgb);
+    return this.rgbToHex(rgb);
   }
 
   hsvToRgb(hsv: HueSaturationValue): RedGreenBlue {
